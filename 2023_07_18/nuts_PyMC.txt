@@ -1,0 +1,4 @@
+Amp:	24.99	Center:	112.17	Width:	1.53
+Amp:	103.35	Center:	128.06	Width:	4.39
+Amp:	100.90	Center:	144.30	Width:	2.12
+Chi2: 63928.880597270385

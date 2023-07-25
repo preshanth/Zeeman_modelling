@@ -1,0 +1,63 @@
+N = 1
+Amp:	133.99	Center:	130.04	Width:	5.32
+Chi2: 432.1279343952299
+N = 2
+Amp:	72.44	Center:	126.13	Width:	3.52
+Amp:	105.33	Center:	132.37	Width:	4.20
+Chi2: 47.61157993660274
+N = 3
+Amp:	39.99	Center:	124.45	Width:	2.82
+Amp:	122.92	Center:	130.26	Width:	4.02
+Amp:	30.37	Center:	136.31	Width:	2.86
+Chi2: 4.501129854933693
+N = 4
+Amp:	12.40	Center:	123.23	Width:	2.06
+Amp:	106.98	Center:	127.86	Width:	3.78
+Amp:	65.74	Center:	133.10	Width:	3.05
+Amp:	24.92	Center:	137.31	Width:	2.53
+Chi2: 1.6319204360817698
+N = 5
+Amp:	8.15	Center:	122.85	Width:	1.83
+Amp:	104.77	Center:	127.34	Width:	3.62
+Amp:	44.82	Center:	131.12	Width:	2.39
+Amp:	43.59	Center:	133.97	Width:	2.29
+Amp:	36.10	Center:	137.05	Width:	2.53
+Chi2: 1.8442339626130013
+N = 6
+Amp:	1.03	Center:	117.90	Width:	3.37
+Amp:	9.81	Center:	122.32	Width:	2.00
+Amp:	70.41	Center:	125.60	Width:	2.82
+Amp:	74.67	Center:	129.53	Width:	2.65
+Amp:	73.87	Center:	133.29	Width:	2.74
+Amp:	28.75	Center:	137.32	Width:	2.50
+Chi2: 0.3973979134684037
+N = 7
+Amp:	1.51	Center:	119.78	Width:	3.97
+Amp:	29.43	Center:	122.87	Width:	2.17
+Amp:	65.75	Center:	126.03	Width:	2.29
+Amp:	81.24	Center:	129.32	Width:	2.23
+Amp:	7.55	Center:	131.36	Width:	1.64
+Amp:	68.58	Center:	132.94	Width:	2.31
+Amp:	45.29	Center:	136.50	Width:	2.67
+Chi2: 0.38099852842289456
+N = 8
+Amp:	19.74	Center:	123.27	Width:	1.98
+Amp:	23.10	Center:	124.00	Width:	3.05
+Amp:	79.39	Center:	127.11	Width:	2.38
+Amp:	46.04	Center:	129.76	Width:	1.88
+Amp:	59.54	Center:	131.94	Width:	2.00
+Amp:	44.05	Center:	134.09	Width:	2.07
+Amp:	37.10	Center:	136.66	Width:	2.20
+Amp:	7.66	Center:	139.40	Width:	2.05
+Chi2: 1.8668129523216606
+N = 9
+Amp:	30.30	Center:	122.34	Width:	2.00
+Amp:	90.18	Center:	124.71	Width:	0.12
+Amp:	46.66	Center:	124.74	Width:	1.56
+Amp:	35.59	Center:	126.48	Width:	0.27
+Amp:	124.05	Center:	128.81	Width:	2.24
+Amp:	42.26	Center:	131.75	Width:	1.33
+Amp:	80.09	Center:	134.24	Width:	1.81
+Amp:	36.20	Center:	137.73	Width:	1.79
+Amp:	3.89	Center:	140.79	Width:	0.89
+Chi2: 30.590969989995557

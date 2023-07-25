@@ -1,0 +1,72 @@
+N = 1
+
+Amp:	134.59	Center:	130.00	Width:	5.26
+Chi2: 414.5787369319144
+N = 2
+
+Amp:	72.44	Center:	126.13	Width:	3.52
+Amp:	105.33	Center:	132.37	Width:	4.20
+Chi2: 47.611627661364786
+N = 3
+
+Amp:	39.92	Center:	124.45	Width:	2.82
+Amp:	122.95	Center:	130.26	Width:	4.02
+Amp:	30.34	Center:	136.31	Width:	2.86
+Chi2: 4.500726206983423
+N = 4
+
+Amp:	12.74	Center:	123.25	Width:	2.07
+Amp:	109.43	Center:	127.98	Width:	3.81
+Amp:	60.69	Center:	133.10	Width:	2.95
+Amp:	27.59	Center:	137.20	Width:	2.56
+Chi2: 1.6299909003308053
+N = 5
+
+Amp:	77.29	Center:	125.28	Width:	2.98
+Amp:	41.49	Center:	128.03	Width:	1.97
+Amp:	59.70	Center:	130.48	Width:	1.97
+Amp:	58.94	Center:	133.04	Width:	2.18
+Amp:	49.56	Center:	136.27	Width:	2.73
+Chi2: 2.1511878108329126
+N = 6
+
+Amp:	0.81	Center:	118.80	Width:	6.00
+Amp:	24.43	Center:	123.34	Width:	2.37
+Amp:	100.81	Center:	127.90	Width:	3.33
+Amp:	74.28	Center:	132.84	Width:	2.95
+Amp:	29.67	Center:	137.10	Width:	2.58
+Amp:	1449.19	Center:	141.47	Width:	0.03
+Chi2: 0.23593474091325176
+N = 7
+
+Amp:	1.70	Center:	121.81	Width:	5.44
+Amp:	20.19	Center:	122.64	Width:	2.14
+Amp:	83.02	Center:	126.39	Width:	2.68
+Amp:	22.41	Center:	128.87	Width:	1.97
+Amp:	90.46	Center:	131.57	Width:	2.48
+Amp:	10.46	Center:	134.43	Width:	1.84
+Amp:	48.62	Center:	136.33	Width:	2.71
+Chi2: 0.20580617286739816
+N = 8
+
+Amp:	1.35	Center:	119.89	Width:	4.59
+Amp:	38.10	Center:	123.24	Width:	2.26
+Amp:	48.13	Center:	126.01	Width:	2.10
+Amp:	96.47	Center:	129.31	Width:	2.40
+Amp:	56.01	Center:	132.59	Width:	2.12
+Amp:	51.83	Center:	135.57	Width:	2.35
+Amp:	0.11	Center:	134.06	Width:	0.11
+Amp:	12.98	Center:	138.74	Width:	2.16
+Chi2: 0.3956074773330523
+N = 9
+
+Amp:	0.99	Center:	114.28	Width:	30.81
+Amp:	51.64	Center:	123.66	Width:	2.30
+Amp:	73.52	Center:	126.70	Width:	1.78
+Amp:	66.93	Center:	128.62	Width:	1.13
+Amp:	120.41	Center:	129.64	Width:	0.38
+Amp:	109.64	Center:	131.32	Width:	0.49
+Amp:	88.06	Center:	132.86	Width:	1.12
+Amp:	26.75	Center:	135.12	Width:	1.04
+Amp:	54.11	Center:	136.38	Width:	2.51
+Chi2: 28.820916579957764
