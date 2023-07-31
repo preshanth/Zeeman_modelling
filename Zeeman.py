@@ -178,12 +178,12 @@ axs[0].plot(x_axis, V_model - alpha * I_fit, label = 'Fit', color = 'r', linewid
 # axs[0].plot(x_axis, V - V_model, 'x', markersize = 3, color = 'red', label = 'Residuals')
 axs[0].errorbar(x_axis, V - alpha * I_fit, yerr = noise_V, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
 
-print(f'Alpha: {alpha[0]:.2f}')
-print(f'Alpha: {alpha[0]:.2f}', file=out_file)
+print('Alpha:', f'{alpha[0]:.2f}')
+print('Alpha:', f'{alpha[0]:.2f}', sep='\t', file=out_file)
 for i in range(num):
     axs[0].plot(x_axis, beta[i] * np.gradient(compoments[i], d_nu), label = f'Beta{i}', alpha = 0.5)
-    print(f'Beta {i}: {beta[i]:.2f}', file=out_file) # Print to file
-    print(f'Beta {i}: {beta[i]:.2f}')
+    print(f'Beta{i}:', f'{beta[i]:.2f}', sep='\t', file=out_file) # Print to file
+    print(f'Beta{i}:', f'{beta[i]:.2f}', sep='\t')
 
 axs[0].legend()
 axs[1].plot(x_axis, (V - V_model), label='Residuals')
