@@ -1,9 +1,0 @@
-Model: CompoundModel
-Inputs: ('x',)
-Outputs: ('y',)
-Model set size: 1
-Expression: [0] + [1]
-Components: 
-    [0]: <Gaussian1D(amplitude=105.33235237, mean=132.36783413, stddev=4.19545436)>
-
-    [1]: <Gaussian1D(amplitude=72.43964943, mean=126.12790533, stddev=3.51994486)>

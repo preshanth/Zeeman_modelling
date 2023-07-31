@@ -1,9 +1,0 @@
-Amp:	2.53	Center:	116.53	Width:	2.19
-Amp:	4.20	Center:	132.96	Width:	2.54
-Amp:	1.64	Center:	136.34	Width:	1.61
-Chi2: 0.19004141446440295
-Alpha: 0.05
-Beta 0: 519.53
-Beta 1: 657.07
-Beta 2: 659.79
-Chi2: 0.3375030040836745
