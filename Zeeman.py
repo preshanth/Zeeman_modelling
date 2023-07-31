@@ -5,7 +5,8 @@ parser.add_argument('pixel', type=int, nargs=2, help='Pixel coordinates of the r
 parser.add_argument('--mapping', type=int, nargs='+', help='Number of Gaussian components to fit each visible peak')
 parser.add_argument('--output', type=str, default=None, help='Output directory')
 parser.add_argument('--init', action='store_true', help='Visualize the position of initial guesses')
-parser.add_argument('--plot', action='store_true', help='Plot the results')
+parser.add_argument('--plotI', action='store_true', help='Plot individually the stokes I results')
+parser.add_argument('--plotV', action='store_true', help='Plot individually the stokes V results')
 # parser.add_argument('--verbose', action='store_true', help='Print out the results')
 parser.add_argument('--trace', action='store_true', help='Plot trace plots')
 parser.add_argument('--corner', action='store_true', help='Plot corner plots')
@@ -38,6 +39,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from scipy.signal import find_peaks
+import arviz as az
+az.style.use("arviz-darkgrid")
 
 # Read information from FITS files
 I_hdu = fits.open(args.filename[0])
@@ -68,10 +71,12 @@ if args.output == None:
 else: 
     Path(args.output).mkdir(parents=True, exist_ok=True)
     cwd = args.output + '/'
+out_file = open(cwd + 'output.txt', 'w')
 
 guess = guess_gen(I, args.mapping)
 num = len(guess) // 3
-noise = np.std(np.concatenate((I[:int(guess[1] - guess[2])], I[int(guess[-2] + guess[-1]):])), ddof = 1)
+noise_I = np.std(np.concatenate((I[:int(guess[1] - 6*guess[2])], I[int(guess[-2] + 6*guess[-1]):])), ddof = 1)
+noise_V = np.std(np.concatenate((V[:int(guess[1] - 6*guess[2])], V[int(guess[-2] + 6*guess[-1]):])), ddof = 1)
 
 if(args.init):
     plt.plot(I)
@@ -82,6 +87,7 @@ if(args.init):
 import pymc as pm
 I_model = pm.Model()
 xs = np.arange(len(I))
+
 with I_model as model:
     xdata = pm.ConstantData("x", xs)
     # Priors for unknown model parameters
@@ -91,11 +97,20 @@ with I_model as model:
 
     gauss_sum = np.sum([amp[i] * pm.math.exp(-0.5 * ((xdata - mu[i]) / sigma[i]) ** 2) for i in range(num)], axis=0)
     # Likelihood (sampling distribution) of observations
-    likelihood = pm.Normal("y", mu=gauss_sum, observed=I, sigma=noise)
+    likelihood = pm.Normal("y", mu=gauss_sum, observed=I, sigma=noise_I)
 
     # inference
-    trace = pm.sample(draws=10_000, tune=5_000, cores = 24, chains = 24, discard_tuned_samples=False, step = pm.NUTS(),
+    trace = pm.sample(draws=10_000, tune=5_000, cores = 24, chains = 24, discard_tuned_samples=True, step = pm.NUTS(),
                       initvals={'amp': guess[0::3], 'mu': guess[1::3], 'sigma': guess[2::3]})
+
+if args.trace: 
+    axes = az.plot_trace(trace, compact=False);
+    fig = axes.ravel()[0].figure
+    fig.savefig(cwd + 'I_trace.png')
+
+if args.corner:
+    import corner
+    corner.corner(trace, quantiles=[0.16, 0.5, 0.84], show_titles=True, title_fmt = '.4e').savefig(cwd + 'I_corner.png');
 
 post = trace.posterior
 mean = post.mean(dim=["chain", "draw"])
@@ -112,16 +127,101 @@ axs[0].set(title=name + " Stokes I Fit", ylabel = "Flux Density (Jy)")
 axs[0].plot(x_axis, I, 'o', color = 'green', label = 'Data', markersize = 4)
 axs[0].plot(x_axis, model, label = 'Fit', color = 'c')
 axs[0].plot(x_axis, I - model, 'x', markersize = 3, color = 'red', label = 'Residuals')
-axs[0].errorbar(x_axis, I - model, yerr = 0.01, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
+axs[0].errorbar(x_axis, I - model, yerr = noise_I, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
 
 for i in range(num):
     axs[0].plot(x_axis, amp[i] * np.exp(-((x - mu[i]) ** 2) / (2 * sig[i] ** 2)), label = f'Gauss{i}', alpha = 0.5)
-    print('Amp:' , f"{amp[i]:.2f}", 'Center:', f"{mu[i]:.2f}", 'Width:', f"{sig[i]:.2f}", sep='\t') # Print to file
+    print('Amp:' , f"{amp[i]:.2f}", 'Center:', f"{mu[i]:.2f}", 'Width:', f"{sig[i]:.2f}", sep='\t', file=out_file) # Print to file
+    print('Amp:' , f"{amp[i]:.2f}", 'Center:', f"{mu[i]:.2f}", 'Width:', f"{sig[i]:.2f}", sep='\t')
 
 axs[0].legend()
 axs[1].plot(x_axis, (I - model), label = 'Residuals')
 axs[1].set(xlabel = "Frequency (GHz)")
-axs[1].legend()
+axs[1].legend(title=f'$\chi^2$ = {np.sum((I - model)**2):.2f}')
+print('Chi2:', np.sum((I - model)**2), file = out_file)
 print('Chi2:', np.sum((I - model)**2))
 fig.savefig(cwd + 'I_fit.png')
 I_fit = model
+
+stokesVmodel = pm.Model()
+compoments = np.array([amp[i] * np.exp(-0.5 * ((xs - mu[i]) / sig[i]) ** 2) for i in range(num)])
+
+with stokesVmodel as model:
+    Ifit = pm.Data("I", I_fit)
+    d_I = pm.Data("d_I", np.gradient(compoments, d_nu, axis = 1))
+    alpha = pm.Flat("alpha", shape = 1)
+    beta = pm.Flat("beta", shape = num)
+    V_fit = alpha * Ifit + pm.math.sum([beta[i] * d_I[i] for i in range(num)], axis=0)
+    V_likelihood = pm.Normal("V", mu=V_fit, observed=V, sigma=0.01)
+    
+    V_trace = pm.sample(draws=10_000, tune=5_000, cores = 24, chains = 24, discard_tuned_samples=True, step = pm.NUTS())
+
+if args.trace: 
+    axes = az.plot_trace(V_trace, compact=False);
+    fig = axes.ravel()[0].figure
+    fig.savefig(cwd + 'V_trace.png')
+
+if args.corner:
+    import corner
+    corner.corner(V_trace, quantiles=[0.16, 0.5, 0.84], show_titles=True, title_fmt = '.4e').savefig(cwd + 'V_corner.png');
+
+post = V_trace.posterior
+mean = post.mean(dim=["chain", "draw"])
+alpha = mean.alpha.values
+beta = mean.beta.values
+V_model = alpha * I_fit + np.sum([beta[i] * np.gradient(compoments, d_nu, axis = 1)[i] for i in range(num)], axis=0)
+
+fig, axs = plt.subplots(2, 1, figsize=(15, 8), sharex=True)
+axs[0].set(title=name + " Stokes V Fit", ylabel = "Flux Density (Jy)")
+axs[0].plot(x_axis, V - alpha * I_fit, 'o', color = 'green', label = 'Data', markersize = 4)
+axs[0].plot(x_axis, V_model - alpha * I_fit, label = 'Fit', color = 'r', linewidth = 2)
+# axs[0].plot(x_axis, V - V_model, 'x', markersize = 3, color = 'red', label = 'Residuals')
+axs[0].errorbar(x_axis, V - alpha * I_fit, yerr = noise_V, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
+
+print(f'Alpha: {alpha[0]:.2f}')
+print(f'Alpha: {alpha[0]:.2f}', file=out_file)
+for i in range(num):
+    axs[0].plot(x_axis, beta[i] * np.gradient(compoments[i], d_nu), label = f'Beta{i}', alpha = 0.5)
+    print(f'Beta {i}: {beta[i]:.2f}', file=out_file) # Print to file
+    print(f'Beta {i}: {beta[i]:.2f}')
+
+axs[0].legend()
+axs[1].plot(x_axis, (V - V_model), label='Residuals')
+axs[1].set(xlabel = "Frequency (GHz)")
+axs[1].legend(title=f'$\chi^2$ = {np.sum((V - V_model)**2):.2f}')
+print('Chi2:', np.sum((V - V_model)**2))
+print('Chi2:', np.sum((V - V_model)**2), file=out_file)
+fig.savefig(cwd + 'V_fit.png')
+
+out_file.close()
+
+# Plot 4 panel figure
+fig, axs = plt.subplots(2, 2, figsize=(15, 10), sharex=True, sharey=False)
+axs[0][0].set(title=name + "  Stokes I Fit", ylabel = "Flux Density (Jy)")
+axs[0][0].plot(x_axis, I, 'o', color = 'green', label = 'Data', markersize = 4)
+axs[0][0].plot(x_axis, I_fit, label = 'Fit', color = 'r', linewidth = 2)
+axs[0][0].plot(x_axis, I - I_fit, 'x', markersize = 3, color = 'black', label = 'Residuals')
+axs[0][0].errorbar(x_axis, I, yerr = noise_I, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
+
+for i in range(3):
+    axs[0][0].plot(x_axis, amp[i] * np.exp(-((x - mu[i]) ** 2) / (2 * sig[i] ** 2)), label = f'Gauss{i}', alpha = 0.5)
+
+axs[0][0].legend()
+axs[1][0].plot(x_axis, (I - I_fit), label = 'Residuals')
+axs[1][0].set(xlabel = "Frequency (GHz)")
+axs[1][0].legend(title=f'$\chi^2$ = {np.sum((I - I_fit)**2):.2f}')
+
+axs[0][1].set(title=name + " Stokes V Fit")
+axs[0][1].plot(x_axis, V - alpha * I_fit, 'o', color = 'green', label = 'Data', markersize = 4)
+axs[0][1].plot(x_axis, V_model - alpha * I_fit, label = 'Fit', color = 'r', linewidth = 2)
+axs[0][1].errorbar(x_axis, V - alpha * I_fit, yerr = noise_V, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
+
+for i in range(num):
+    axs[0][1].plot(x_axis, beta[i] * np.gradient(compoments[i], d_nu), label = f'Beta{i}', alpha = 0.5)
+
+axs[0][1].legend()
+axs[1][1].plot(x_axis, (V - V_model), label = 'Residuals')
+axs[1][1].set(xlabel = "Frequency (GHz)")
+axs[1][1].legend(title=f'$\chi^2$ = {np.sum((V - V_model)**2):.2f}')
+
+fig.savefig(cwd + '4_panel.png')
