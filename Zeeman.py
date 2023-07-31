@@ -203,7 +203,7 @@ axs[0][0].plot(x_axis, I_fit, label = 'Fit', color = 'r', linewidth = 2)
 axs[0][0].plot(x_axis, I - I_fit, 'x', markersize = 3, color = 'black', label = 'Residuals')
 axs[0][0].errorbar(x_axis, I, yerr = noise_I, fmt = 'none', ecolor = 'k', elinewidth = 1, capsize = 2, alpha = 0.2)
 
-for i in range(3):
+for i in range(num):
     axs[0][0].plot(x_axis, amp[i] * np.exp(-((x - mu[i]) ** 2) / (2 * sig[i] ** 2)), label = f'Gauss{i}', alpha = 0.5)
 
 axs[0][0].legend()

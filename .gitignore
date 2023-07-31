@@ -164,6 +164,3 @@ cython_debug/
 
 # Test Data
 *.FITS
-
-# Jupyter Notebook
-*.ipynb
