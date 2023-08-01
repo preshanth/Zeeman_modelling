@@ -1,7 +1,3 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "Zeeman Modeling"
 dynamic = ["readme"]
@@ -9,33 +5,37 @@ version = "0.1"
 authors = [
          {name = "Jui-Teng (Roy) Hsu", email = "hjuiteng@gmail.com" },
          {name = "Preshanth Jagannathan", email = "pjaganna@nrao.edu" }]
-description = "Image plane primary beam correction for radio interferometers"
+description = "Automated Zeeman analysis spectrum fitter"
 dependencies = [
-    'pymc>=5',
-    'scipy',
+    'pymc>=5.0',
+    'scipy>=1.3',
     'numpy>=1.8.0',
     'astropy',
     'matplotlib']
 license = {file="LICENSE"}
-requires-python = ">=3.8"
+requires-python = ">=3.9"
+[project.urls]
+"Homepage" = "https://github.com/preshanth/Zeeman_modelling" 
 classifiers = [
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: MIT License",
             "Operating System :: OS Independent",
             ]
 
-[project.urls]
-"Homepage" = "https://github.com/ARDG-NRAO/plumber" 
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project.scripts]
 plumber = "plumber.scripts.plumber:main"
 parang_finder = "plumber.scripts.parang_finder:main"
 
 [tool.setuptools]
+zip_safe = false
 include-package-data = true
 
 [tool.setuptools.dynamic]
-readme = {file = ["README.md"]}
+readme = {file = ["README.rst"]}
 
 [tool.setuptools.packages.find]
 where = ["src"]
