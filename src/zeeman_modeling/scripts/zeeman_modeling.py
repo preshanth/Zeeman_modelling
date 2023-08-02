@@ -40,7 +40,6 @@ import arviz as az
 az.style.use("arviz-darkgrid")
 
 def main():
-    from func import mkdir
 
     # Read information from FITS files
     I_hdu = fits.open(args.filename[0])
@@ -63,11 +62,12 @@ def main():
     # ref_pix = I_h['ALTRPIX']
     # vel_axis = (ref_vel + (np.arange(len(spec)) - ref_pix + 2) * (FreqtoLSR(nu_init) - FreqtoLSR(nu_init + d_nu))) / 1e3
 
+    from zeeman_modeling.func import mkdir
     cwd = mkdir(name, args.output)
 
     out_file = open(cwd + "output.txt", "w")
 
-    from func import guess_gen
+    from zeeman_modeling.func import guess_gen
 
     guess = guess_gen(I, args.mapping)
     num = len(guess) // 3
@@ -90,8 +90,7 @@ def main():
             plt.axvline(guess[3 * i + 1], color="r")
         plt.savefig(cwd + "init_guess.png")
 
-    import pymc as pm
-    from bayesian import fit_I
+    from zeeman_modeling.bayesian import fit_I
 
     Itrace = fit_I(guess, I, noise_I)
 
@@ -172,7 +171,7 @@ def main():
     compoments = np.array(
         [amp[i] * np.exp(-0.5 * ((xs - mu[i]) / sig[i]) ** 2) for i in range(num)]
     )
-    from bayesian import fit_V
+    from zeeman_modeling.bayesian import fit_V
     V_trace = fit_V(I_fit, V, d_nu, amp, mu, sig, noise_V)
 
     if args.trace:
