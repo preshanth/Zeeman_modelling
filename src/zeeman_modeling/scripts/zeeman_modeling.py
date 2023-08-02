@@ -91,7 +91,6 @@ def main():
         plt.savefig(cwd + "init_guess.png")
 
     from zeeman_modeling.bayesian import fit_I
-
     Itrace = fit_I(guess, I, noise_I)
 
     if args.trace:
