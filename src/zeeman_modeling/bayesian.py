@@ -51,7 +51,7 @@ def fit_V(I_fit: np.ndarray, V: np.ndarray, d_nu: float, amp: list, mu: list, si
     )
 
     with stokesVmodel as model:
-        Ifit = pm.Data("I", I_fit)
+        Ifit = pm.Data("I", I_fit, mutable=False)
         d_I = pm.Data("d_I", np.gradient(compoments, d_nu, axis=1))
         alpha = pm.Flat("alpha", shape=1)
         beta = pm.Flat("beta", shape=num)
@@ -66,3 +66,4 @@ def fit_V(I_fit: np.ndarray, V: np.ndarray, d_nu: float, amp: list, mu: list, si
             discard_tuned_samples=True,
             step=pm.NUTS(),
         )
+        return V_trace
