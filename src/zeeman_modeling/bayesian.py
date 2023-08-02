@@ -1,4 +1,5 @@
 import pymc as pm
+import numpy as np
 
 def fit_I(guess: list, I: np.ndarray, noise_I: float):
     I_model = pm.Model()
@@ -41,9 +42,10 @@ def fit_I(guess: list, I: np.ndarray, noise_I: float):
     
     return trace
 
-def fit_V(I_fit: ndarray, V: ndarray, d_nu: float, amp: list, mu: list, sig: list, noise_V: float):
+def fit_V(I_fit: np.ndarray, V: np.ndarray, d_nu: float, amp: list, mu: list, sig: list, noise_V: float):
     num = len(amp)
     stokesVmodel = pm.Model()
+    xs = np.arange(len(I_fit))
     compoments = np.array(
         [amp[i] * np.exp(-0.5 * ((xs - mu[i]) / sig[i]) ** 2) for i in range(num)]
     )

@@ -167,7 +167,8 @@ def main():
     print("Chi2:", np.sum((I - model) ** 2))
     fig.savefig(cwd + "I_fit.png")
     I_fit = model
-
+    
+    xs = np.arange(len(I))
     compoments = np.array(
         [amp[i] * np.exp(-0.5 * ((xs - mu[i]) / sig[i]) ** 2) for i in range(num)]
     )
