@@ -41,7 +41,6 @@ Usage
 --mapping       [MAPPING …] Number of Gaussian components to fit each visible peak
 --output        Output directory 
 --init          Visualize the position of initial guesses 
---plot          Plot the results 
 --trace         Plot trace plots
 --corner        Plot corner plots
 
