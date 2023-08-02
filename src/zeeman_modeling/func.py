@@ -30,6 +30,7 @@ def mkdir(name: str, usr: str) -> str:
     return cwd
 
 def guess_gen(spec, n_dist):
+    import numpy as np
     from scipy.signal import find_peaks
     """Function to generate initial guesses based on spectral input and Gaussian components mapping.
 
