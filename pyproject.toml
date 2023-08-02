@@ -1,5 +1,5 @@
 [project]
-name = "Zeeman Modeling"
+name = "Zeeman_modeling"
 dynamic = ["readme"]
 version = "0.1"
 authors = [
@@ -14,24 +14,22 @@ dependencies = [
     'matplotlib']
 license = {file="LICENSE"}
 requires-python = ">=3.9"
-[project.urls]
-"Homepage" = "https://github.com/preshanth/Zeeman_modelling" 
 classifiers = [
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: MIT License",
             "Operating System :: OS Independent",
             ]
+[project.urls]
+"Homepage" = "https://github.com/preshanth/Zeeman_modelling" 
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-plumber = "plumber.scripts.plumber:main"
-parang_finder = "plumber.scripts.parang_finder:main"
+zeeman_modeling = "zeeman_modeling.scripts.zeeman_modeling:main"
 
 [tool.setuptools]
-zip_safe = false
 include-package-data = true
 
 [tool.setuptools.dynamic]
