@@ -32,84 +32,6 @@ parser.add_argument("--corner", action="store_true", help="Plot corner plots")
 args = parser.parse_args()
 
 
-def guess_gen(spec, n_dist):
-    from scipy.signal import find_peaks
-    """Function to generate initial guesses based on spectral input and Gaussian components mapping.
-
-    Generates initial guesses for the fitting process based on the spectral input and
-    the number of Gaussian components to fit each visible peak.
-
-    Parameters
-    ----------
-        spec: array_like
-            Spectral input to be analysed.
-        n_dist: array_like, optional
-            Number of Gaussian components to fit each visible peak.
-
-    Returns
-    -------
-        guess: array_like
-            Initial guesses for the fitting process.
-    """
-    guess = []
-    peaks, info = find_peaks(spec, height=0.0, prominence=0.2, width=0)
-
-    if n_dist == None or len(peaks) != len(n_dist):
-        n_dist = [] if n_dist == None else n_dist
-        print(
-            f"Mapping doesn't match. There are {len(peaks)} visible peaks but mapping for {len(n_dist)} peaks were provided. Defaults to 1 instead."
-        )
-        n_dist = np.ones(len(peaks)) * 1
-
-    for i in range(len(peaks)):
-        center = peaks[i]
-        width = info["widths"][i] * 0.6
-        n = n_dist[i]
-
-        if n == 1:
-            guess.append(spec[int(center)])
-            guess.append(center)
-            guess.append(width / n)
-            continue
-
-        for j in np.linspace(center - width, center + width, n):
-            guess.append(spec[int(j)])
-            guess.append(j)
-            guess.append(width / n)
-
-    return guess
-
-def mkdir(name: str, usr: str) -> str:
-        """Function to make directory for output files depending on the user input.
-
-        If the user input is None, then the directory will be named after the object name.
-        If the user input is not None, then the directory will be named after the user input.
-
-        Parameters
-        ----------
-            name: str
-                Name of the observed object, read from the FITS file header.
-            usr: str
-                Name of the user defiend directory passed from args.output.
-
-        Returns
-        -------
-            cwd: str
-                Current working directory of the rest of the program.
-        """
-
-        from pathlib import Path
-
-        if usr == None:
-            Path(name).mkdir(parents=True, exist_ok=True)
-            cwd = name + "/"
-
-        else:
-            Path(args.output).mkdir(parents=True, exist_ok=True)
-            cwd = args.output + "/"
-
-        return cwd
-
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
@@ -118,6 +40,7 @@ import arviz as az
 az.style.use("arviz-darkgrid")
 
 def main():
+    from func import mkdir
 
     # Read information from FITS files
     I_hdu = fits.open(args.filename[0])
@@ -144,6 +67,8 @@ def main():
 
     out_file = open(cwd + "output.txt", "w")
 
+    from func import guess_gen
+
     guess = guess_gen(I, args.mapping)
     num = len(guess) // 3
     noise_I = np.std(
@@ -166,46 +91,12 @@ def main():
         plt.savefig(cwd + "init_guess.png")
 
     import pymc as pm
+    from bayesian import fit_I
 
-    I_model = pm.Model()
-    xs = np.arange(len(I))
-
-    with I_model as model:
-        xdata = pm.ConstantData("x", xs)
-        # Priors for unknown model parameters
-        amp = pm.Uniform("amp", lower=0, upper=np.max(I) * 1.2, shape=num)
-        mu = pm.Normal(
-            "mu",
-            mu=guess[1::3],
-            sigma=10,
-            shape=num,
-            transform=pm.distributions.transforms.univariate_ordered,
-        )
-        sigma = pm.HalfNormal("sigma", sigma=10, shape=num)
-
-        gauss_sum = np.sum(
-            [
-                amp[i] * pm.math.exp(-0.5 * ((xdata - mu[i]) / sigma[i]) ** 2)
-                for i in range(num)
-            ],
-            axis=0,
-        )
-        # Likelihood (sampling distribution) of observations
-        likelihood = pm.Normal("y", mu=gauss_sum, observed=I, sigma=noise_I)
-
-        # inference
-        trace = pm.sample(
-            draws=10_000,
-            tune=5_000,
-            cores=4,
-            chains=4,
-            discard_tuned_samples=True,
-            step=pm.NUTS(),
-            initvals={"amp": guess[0::3], "mu": guess[1::3], "sigma": guess[2::3]},
-        )
+    Itrace = fit_I(guess, I, noise_I)
 
     if args.trace:
-        axes = az.plot_trace(trace, compact=False)
+        axes = az.plot_trace(Itrace, compact=False)
         fig = axes.ravel()[0].figure
         fig.savefig(cwd + "I_trace.png")
 
@@ -213,10 +104,10 @@ def main():
         import corner
 
         corner.corner(
-            trace, quantiles=[0.16, 0.5, 0.84], show_titles=True, title_fmt=".4e"
+            Itrace, quantiles=[0.16, 0.5, 0.84], show_titles=True, title_fmt=".4e"
         ).savefig(cwd + "I_corner.png")
 
-    post = trace.posterior
+    post = Itrace.posterior
     mean = post.mean(dim=["chain", "draw"])
     amp = mean.amp.values
     mu = mean.mu.values
@@ -278,27 +169,11 @@ def main():
     fig.savefig(cwd + "I_fit.png")
     I_fit = model
 
-    stokesVmodel = pm.Model()
     compoments = np.array(
         [amp[i] * np.exp(-0.5 * ((xs - mu[i]) / sig[i]) ** 2) for i in range(num)]
     )
-
-    with stokesVmodel as model:
-        Ifit = pm.Data("I", I_fit)
-        d_I = pm.Data("d_I", np.gradient(compoments, d_nu, axis=1))
-        alpha = pm.Flat("alpha", shape=1)
-        beta = pm.Flat("beta", shape=num)
-        V_fit = alpha * Ifit + pm.math.sum([beta[i] * d_I[i] for i in range(num)], axis=0)
-        V_likelihood = pm.Normal("V", mu=V_fit, observed=V, sigma=0.01)
-
-        V_trace = pm.sample(
-            draws=10_000,
-            tune=5_000,
-            cores=4,
-            chains=4,
-            discard_tuned_samples=True,
-            step=pm.NUTS(),
-        )
+    from bayesian import fit_V
+    V_trace = fit_V(I_fit, V, d_nu, amp, mu, sig, noise_V)
 
     if args.trace:
         axes = az.plot_trace(V_trace, compact=False)
