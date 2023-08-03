@@ -4,8 +4,8 @@ Zeeman_modelling
 About
 -----
 
-This Python scirpt file aims to standardize and automize the Zeeman
-anlaysis process through robust curve fitting and Bayesian-based
+This command line program written in Python aims to standardize and automize the Zeeman
+anlaysis process in emission line radio astronomy through robust curve fitting and Bayesian-based
 parameter sampling. We hope to minimize user bias in the study of
 interstellar magnetic fields through this software solution.
 
@@ -22,8 +22,39 @@ Getting Started
 - cd into the directory where the Stokes I and Stokes V cubes are and call the program by:
 .. code:: sh
    
-   zeeman_modeling FILENAME_STOKESI FILENAME_STOKESV XPIXEL YPIXEL [OPTIONS]
+   zeeman_modeling FILENAME_STOKESI [FILENAME_STOKESV] XPIXEL YPIXEL [OPTIONS]
+
 - see detailed options and examples below 
+- To verify correct installation, run:
+.. code:: sh
+
+   zeeman_modeling -h 
+   # or
+   zeeman_modeling --help
+
+- Expected output
+.. code-block:: console
+
+   usage: zeeman_modeling [-h] [--mapping MAPPING [MAPPING ...]] [--output OUTPUT] [--justI] [--vel] [--init] [--trace]
+                       [--corner]
+                       filename [filename ...] pixel pixel
+
+   Zeeman analysis and fitting
+      
+   positional arguments:
+     filename              Filename of the Stoeks I and Stokes V FITS file to be analysed
+     pixel                 Pixel coordinates of the region to be analysed
+   
+   options:
+     -h, --help            show this help message and exit
+     --mapping MAPPING [MAPPING ...]
+                           Number of Gaussian components to fit each visible peak
+     --output OUTPUT       Output directory
+     --justI               Only fits Stokes I
+     --vel                 Plot x axis in LSR velocity. Otherwise defaults to frequency
+     --init                Visualize the position of initial guesses
+     --trace               Plot trace plots
+     --corner              Plot corner plots
 
 
 Usage
@@ -33,13 +64,14 @@ Usage
 –init option before proceeding to Stokes I and Stokes V fitting.**
    
 :filename_I:   filename of the Stokes I cube
-:filename_V:   filename of the Stokes V cube
+:filename_V:   filename of the Stokes V cube, optional when using the --justI flag
 :pixel_x:      x value of the selected pixel
 :pixel_y:      y value of the selected pixel
 
 -h, --help      show this help message and exit
 --mapping       [MAPPING …] Number of Gaussian components to fit each visible peak
 --output        Output directory 
+--justI         Conduct line fitting on just the Stokes I profile
 --init          Visualize the position of initial guesses 
 --trace         Plot trace plots
 --corner        Plot corner plots
