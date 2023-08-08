@@ -29,7 +29,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-zeeman_modeling = "zeeman_modeling.scripts.zeeman_modeling:main"
+zeeman_modeling = "zeeman_modeling.scripts.main:main"
 
 [tool.setuptools]
 include-package-data = true

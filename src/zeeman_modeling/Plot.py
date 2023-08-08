@@ -49,18 +49,8 @@ def plotI(
     fig, axs = plt.subplots(2, 1, figsize=(15, 8), sharex=True)
     axs[0].set(title=name + " Stokes I Fit", ylabel="Flux Density (Jy)")
     axs[0].plot(x_axis, I, "o", color="green", label="Data", markersize=4)
-    axs[0].plot(x_axis, model, label="Fit", color="c")
-    axs[0].plot(x_axis, I - model, "x", markersize=3, color="red", label="Residuals")
-    axs[0].errorbar(
-        x_axis,
-        I - model,
-        yerr=noise_I,
-        fmt="none",
-        ecolor="k",
-        elinewidth=1,
-        capsize=2,
-        alpha=0.2,
-    )
+    axs[0].plot(x_axis, model, label="Fit", color="r", linewidth=2)
+    axs[0].plot(x_axis, I - model, "x", markersize=3, color="black", label="Residuals")
 
     for i in range(num):
         axs[0].plot(
@@ -92,6 +82,12 @@ def plotI(
     axs[0].legend()
     axs[1].plot(x_axis, (I - model), label="Residuals")
     axs[1].set(xlabel="LSR Velocity (m/s)")
+    axs[1].fill_between(
+        x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
+    )
+    axs[1].fill_between(
+        x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
+    )
     axs[1].legend(title=f"$\chi^2$ = {np.sum((I - model)**2):.2f}")
     print("Chi2:", np.sum((I - model) ** 2), file=out_file)
     print("Chi2:", np.sum((I - model) ** 2))
@@ -150,16 +146,6 @@ def plotV(
     )
     axs[0].plot(x_axis, V_model - alpha * I_fit, label="Fit", color="r", linewidth=2)
     # axs[0].plot(x_axis, V - V_model, 'x', markersize = 3, color = 'red', label = 'Residuals')
-    axs[0].errorbar(
-        x_axis,
-        V - alpha * I_fit,
-        yerr=noise_V,
-        fmt="none",
-        ecolor="k",
-        elinewidth=1,
-        capsize=2,
-        alpha=0.2,
-    )
 
     print("Alpha:", f"{alpha[0]:.2f}")
     print("Alpha:", f"{alpha[0]:.2f}", sep="\t", file=out_file)
@@ -176,6 +162,12 @@ def plotV(
     axs[0].legend()
     axs[1].plot(x_axis, (V - V_model), label="Residuals")
     axs[1].set(xlabel="LSR Velocity (m/s)")
+    axs[1].fill_between(
+        x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
+    )
+    axs[1].fill_between(
+        x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
+    )
     axs[1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2f}")
     print("Chi2:", np.sum((V - V_model) ** 2))
     print("Chi2:", np.sum((V - V_model) ** 2), file=out_file)
@@ -245,16 +237,6 @@ def plot4pan(
     axs[0][0].plot(
         x_axis, I - I_fit, "x", markersize=3, color="black", label="Residuals"
     )
-    axs[0][0].errorbar(
-        x_axis,
-        I,
-        yerr=noise_I,
-        fmt="none",
-        ecolor="k",
-        elinewidth=1,
-        capsize=2,
-        alpha=0.2,
-    )
     x = np.arange(len(I))
     V_model = alpha * I_fit + np.sum(
         [beta[i] * np.gradient(components, d_nu, axis=1)[i] for i in range(num)], axis=0
@@ -270,6 +252,12 @@ def plot4pan(
     axs[0][0].legend()
     axs[1][0].plot(x_axis, (I - I_fit), label="Residuals")
     axs[1][0].set(xlabel="LSR Velocity (m/s)")
+    axs[1][0].fill_between(
+        x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
+    )
+    axs[1][0].fill_between(
+        x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
+    )
     axs[1][0].legend(title=f"$\chi^2$ = {np.sum((I - I_fit)**2):.2f}")
 
     axs[0][1].set(title=name + " Stokes V Fit")
@@ -277,16 +265,6 @@ def plot4pan(
         x_axis, V - alpha * I_fit, "o", color="green", label="Data", markersize=4
     )
     axs[0][1].plot(x_axis, V_model - alpha * I_fit, label="Fit", color="r", linewidth=2)
-    axs[0][1].errorbar(
-        x_axis,
-        V - alpha * I_fit,
-        yerr=noise_V,
-        fmt="none",
-        ecolor="k",
-        elinewidth=1,
-        capsize=2,
-        alpha=0.2,
-    )
 
     for i in range(num):
         axs[0][1].plot(
@@ -299,6 +277,12 @@ def plot4pan(
     axs[0][1].legend()
     axs[1][1].plot(x_axis, (V - V_model), label="Residuals")
     axs[1][1].set(xlabel="LSR Velocity (m/s)")
+    axs[1][1].fill_between(
+        x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
+    )
+    axs[1][1].fill_between(
+        x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
+    )
     axs[1][1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2f}")
 
     fig.savefig(cwd + "4_panel.png")

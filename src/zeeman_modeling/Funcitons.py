@@ -30,7 +30,7 @@ def mkdir(name: str, usr: str) -> str:
     return cwd
 
 
-def guess_gen(spec, n_dist):
+def guess_gen(spec, n_dist, sensitivity=0.2):
     import numpy as np
     from scipy.signal import find_peaks
 
@@ -52,7 +52,7 @@ def guess_gen(spec, n_dist):
             Initial guesses for the fitting process.
     """
     guess = []
-    peaks, info = find_peaks(spec, height=0.0, prominence=0.2, width=0)
+    peaks, info = find_peaks(spec, height=0.0, prominence=sensitivity, width=0)
 
     if n_dist == None or len(peaks) != len(n_dist):
         n_dist = [] if n_dist == None else n_dist
