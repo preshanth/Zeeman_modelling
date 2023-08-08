@@ -1,11 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import xarray
-
 
 def plotI(
     name: str,
     x_axis: np.ndarray,
+    units: str,
     I: np.ndarray,
     amp: np.ndarray,
     mu: np.ndarray,
@@ -22,6 +21,8 @@ def plotI(
             Name of the observed object, taken from the FITS file.
         x_axis: np.ndarray
             The x_axis to be plotted, taken from the FITS file.
+        units: str
+            The units of the x_axis, taken from the FITS file.
         I: np.ndarray
             Observed Stokes I spectrum.
         amp: list
@@ -81,7 +82,7 @@ def plotI(
 
     axs[0].legend()
     axs[1].plot(x_axis, (I - model), label="Residuals")
-    axs[1].set(xlabel="LSR Velocity (m/s)")
+    axs[1].set(xlabel=units)
     axs[1].fill_between(
         x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
     )
@@ -97,6 +98,7 @@ def plotI(
 def plotV(
     name: str,
     x_axis: np.ndarray,
+    units: str,
     V: np.ndarray,
     components: np.ndarray,
     d_nu: float,
@@ -114,6 +116,8 @@ def plotV(
             Name of the observed object, taken from the FITS file.
         x_axis: np.ndarray
             The x_axis to be plotted, taken from the FITS file.
+        units: str
+            The units of the x_axis, taken from the FITS file.
         V: np.ndarray
             Observed Stokes V spectrum.
         components: np.ndarray
@@ -161,7 +165,7 @@ def plotV(
 
     axs[0].legend()
     axs[1].plot(x_axis, (V - V_model), label="Residuals")
-    axs[1].set(xlabel="LSR Velocity (m/s)")
+    axs[1].set(xlabel=units)
     axs[1].fill_between(
         x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
     )
@@ -177,6 +181,7 @@ def plotV(
 def plot4pan(
     name: str,
     x_axis: np.ndarray,
+    units: str,
     I: np.ndarray,
     V: np.ndarray,
     components: np.ndarray,
@@ -198,6 +203,8 @@ def plot4pan(
             Name of the observed object, taken from the FITS file.
         x_axis: np.ndarray
             The x_axis to be plotted, taken from the FITS file.
+        units: str
+            The units of the x_axis, taken from the FITS file.
         I: np.ndarray
             Observed Stokes I spectrum.
         V: np.ndarray
@@ -251,7 +258,7 @@ def plot4pan(
 
     axs[0][0].legend()
     axs[1][0].plot(x_axis, (I - I_fit), label="Residuals")
-    axs[1][0].set(xlabel="LSR Velocity (m/s)")
+    axs[1][0].set(xlabel=units)
     axs[1][0].fill_between(
         x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
     )
@@ -276,7 +283,7 @@ def plot4pan(
 
     axs[0][1].legend()
     axs[1][1].plot(x_axis, (V - V_model), label="Residuals")
-    axs[1][1].set(xlabel="LSR Velocity (m/s)")
+    axs[1][1].set(xlabel=units)
     axs[1][1].fill_between(
         x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
     )

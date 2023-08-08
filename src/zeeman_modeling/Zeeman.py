@@ -50,6 +50,7 @@ class Zeeman:
         I_h = I_hdu[0].header
         I_hdu.close()
 
+
         I = (
             I_d[:, self.pixel[0], self.pixel[1]]
             if not self.absorb
@@ -61,6 +62,9 @@ class Zeeman:
         nu_ref = I_h["CRPIX3"]
         x_axis = nu_init - nu_ref * d_nu + d_nu * np.arange(len(I))
         name = I_h["OBJECT"]
+
+        units = 'Frequency (GHz)' if I_h["CTYPE3"] == "FREQ" else 'Velocity (km/s)'
+        x_axis = x_axis / 1e9 if I_h["CTYPE3"] == "FREQ" else x_axis / 1e3
 
         from zeeman_modeling.Funcitons import mkdir
 
@@ -114,7 +118,7 @@ class Zeeman:
         self.means = mu
         self.sigmas = sig
 
-        plotI(name, x_axis, I, amp, mu, sig, noise_I, out_file, cwd)
+        plotI(name, x_axis, units, I, amp, mu, sig, noise_I, out_file, cwd)
 
         if self.justI:
             out_file.close()
@@ -168,7 +172,7 @@ class Zeeman:
 
         from zeeman_modeling.Plot import plotV
 
-        plotV(name, x_axis, V, components, d_nu, alpha, beta, noise_V, out_file, cwd)
+        plotV(name, x_axis, units, V, components, d_nu, alpha, beta, noise_V, out_file, cwd)
 
         out_file.close()
         from zeeman_modeling.Plot import plot4pan
@@ -176,6 +180,7 @@ class Zeeman:
         plot4pan(
             name,
             x_axis,
+            units,
             I,
             V,
             components,
