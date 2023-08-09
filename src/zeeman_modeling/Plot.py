@@ -12,6 +12,7 @@ def plotI(
     noise_I: float,
     out_file,
     cwd: str,
+    guess: list = None,
 ):
     """Plots Stokes I fitting results.
 
@@ -52,6 +53,8 @@ def plotI(
     axs[0].plot(x_axis, I, "o", color="green", label="Data", markersize=4)
     axs[0].plot(x_axis, model, label="Fit", color="r", linewidth=2)
     axs[0].plot(x_axis, I - model, "x", markersize=3, color="black", label="Residuals")
+    for i in guess[1::3]:
+        axs[0].axvline(x_axis[int(i)], color="r", linestyle="--", alpha=0.5)
 
     for i in range(num):
         axs[0].plot(
@@ -83,9 +86,6 @@ def plotI(
     axs[0].legend()
     axs[1].plot(x_axis, (I - model), label="Residuals")
     axs[1].set(xlabel=units)
-    axs[1].fill_between(
-        x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
-    )
     axs[1].fill_between(
         x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
     )

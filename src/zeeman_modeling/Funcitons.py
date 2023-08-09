@@ -61,6 +61,13 @@ def guess_gen(spec, n_dist, sensitivity=0.2):
         )
         n_dist = np.ones(len(peaks)) * 1
 
+    import random
+    low = peaks[0] 
+    up = peaks[-1] 
+    for i in range(len(peaks)):
+        peaks[i] = random.uniform(low, up)
+    peaks = np.sort(peaks)
+
     for i in range(len(peaks)):
         center = peaks[i]
         width = info["widths"][i] * 0.6

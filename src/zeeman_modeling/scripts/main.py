@@ -52,5 +52,5 @@ def main():
         args.absorb,
         args.sensitivity,
     )
-
-    fitter.fit()
+    for i in range(10):
+        fitter.fit()
