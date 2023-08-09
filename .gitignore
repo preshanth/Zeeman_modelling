@@ -3,6 +3,9 @@
 # Test Data
 *.FITS
 test/
+DR21W/
+W51C/
+NGC6334F/
 
 # Plot outputs
 img/

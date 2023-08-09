@@ -6,7 +6,6 @@ class Zeeman:
         mapping: list,
         output: str,
         justI: bool,
-        vel: bool,
         init: bool,
         trace: bool,
         corner: bool,
@@ -23,7 +22,6 @@ class Zeeman:
         self.mapping = mapping
         self.output = output
         self.justI = justI
-        self.vel = vel
         self.init = init
         self.trace = trace
         self.corner = corner

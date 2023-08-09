@@ -84,9 +84,6 @@ def plotI(
     axs[1].plot(x_axis, (I - model), label="Residuals")
     axs[1].set(xlabel=units)
     axs[1].fill_between(
-        x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
-    )
-    axs[1].fill_between(
         x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
     )
     axs[1].legend(title=f"$\chi^2$ = {np.sum((I - model)**2):.2f}")
@@ -166,9 +163,6 @@ def plotV(
     axs[0].legend()
     axs[1].plot(x_axis, (V - V_model), label="Residuals")
     axs[1].set(xlabel=units)
-    axs[1].fill_between(
-        x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
-    )
     axs[1].fill_between(
         x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
     )
@@ -260,9 +254,6 @@ def plot4pan(
     axs[1][0].plot(x_axis, (I - I_fit), label="Residuals")
     axs[1][0].set(xlabel=units)
     axs[1][0].fill_between(
-        x_axis, noise_I, -noise_I, color="k", alpha=0.2, label="1 $\sigma$"
-    )
-    axs[1][0].fill_between(
         x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
     )
     axs[1][0].legend(title=f"$\chi^2$ = {np.sum((I - I_fit)**2):.2f}")
@@ -284,9 +275,6 @@ def plot4pan(
     axs[0][1].legend()
     axs[1][1].plot(x_axis, (V - V_model), label="Residuals")
     axs[1][1].set(xlabel=units)
-    axs[1][1].fill_between(
-        x_axis, noise_V, -noise_V, color="k", alpha=0.2, label="1 $\sigma$"
-    )
     axs[1][1].fill_between(
         x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
     )

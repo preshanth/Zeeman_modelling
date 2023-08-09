@@ -20,11 +20,6 @@ parser.add_argument(
 parser.add_argument("--output", type=str, default=None, help="Output directory")
 parser.add_argument("--justI", action="store_true", help="Only fits Stokes I")
 parser.add_argument(
-    "--vel",
-    action="store_true",
-    help="Plot x axis in LSR velocity. Otherwise defaults to frequency",
-)
-parser.add_argument(
     "--init", action="store_true", help="Visualize the position of initial guesses"
 )
 parser.add_argument("--trace", action="store_true", help="Plot trace plots")
@@ -45,7 +40,6 @@ def main():
         args.mapping,
         args.output,
         args.justI,
-        args.vel,
         args.init,
         args.trace,
         args.corner,
