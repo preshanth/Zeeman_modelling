@@ -55,6 +55,7 @@ def fit_I(guess: list, I: np.ndarray, noise_I: float):
             discard_tuned_samples=True,
             step=pm.NUTS(),
             initvals={"amp": guess[0::3], "mu": guess[1::3], "sigma": guess[2::3]},
+            progressbar=False,
         )
 
     return trace
@@ -114,5 +115,6 @@ def fit_V(
             chains=4,
             discard_tuned_samples=True,
             step=pm.NUTS(),
+            progressbar=False,
         )
         return V_trace

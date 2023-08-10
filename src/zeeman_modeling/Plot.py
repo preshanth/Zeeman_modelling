@@ -62,21 +62,21 @@ def plotI(
         )
         print(
             "Amp:",
-            f"{amp[i]:.2f}",
+            f"{amp[i]:.2e}",
             "Center:",
-            f"{mu[i]:.2f}",
+            f"{mu[i]:.2e}",
             "Width:",
-            f"{sig[i]:.2f}",
+            f"{sig[i]:.2e}",
             sep="\t",
             file=out_file,
         )  # Print to file
         print(
             "Amp:",
-            f"{amp[i]:.2f}",
+            f"{amp[i]:.2e}",
             "Center:",
-            f"{mu[i]:.2f}",
+            f"{mu[i]:.2e}",
             "Width:",
-            f"{sig[i]:.2f}",
+            f"{sig[i]:.2e}",
             sep="\t",
         )
 
@@ -86,7 +86,7 @@ def plotI(
     axs[1].fill_between(
         x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
     )
-    axs[1].legend(title=f"$\chi^2$ = {np.sum((I - model)**2):.2f}")
+    axs[1].legend(title=f"$\chi^2$ = {np.sum((I - model)**2):.2e}")
     print("Chi2:", np.sum((I - model) ** 2), file=out_file)
     print("Chi2:", np.sum((I - model) ** 2))
     fig.savefig(cwd + "I_fit.png")
@@ -148,8 +148,8 @@ def plotV(
     axs[0].plot(x_axis, V_model - alpha * I_fit, label="Fit", color="r", linewidth=2)
     # axs[0].plot(x_axis, V - V_model, 'x', markersize = 3, color = 'red', label = 'Residuals')
 
-    print("Alpha:", f"{alpha[0]:.2f}")
-    print("Alpha:", f"{alpha[0]:.2f}", sep="\t", file=out_file)
+    print("Alpha:", f"{alpha[0]:.2e}")
+    print("Alpha:", f"{alpha[0]:.2e}", sep="\t", file=out_file)
     for i in range(num):
         axs[0].plot(
             x_axis,
@@ -157,8 +157,8 @@ def plotV(
             label=f"Beta{i}",
             alpha=0.5,
         )
-        print(f"Beta{i}:", f"{beta[i]:.2f}", sep="\t", file=out_file)  # Print to file
-        print(f"Beta{i}:", f"{beta[i]:.2f}", sep="\t")
+        print(f"Beta{i}:", f"{beta[i]:.2e}", sep="\t", file=out_file)  # Print to file
+        print(f"Beta{i}:", f"{beta[i]:.2e}", sep="\t")
 
     axs[0].legend()
     axs[1].plot(x_axis, (V - V_model), label="Residuals")
@@ -166,7 +166,7 @@ def plotV(
     axs[1].fill_between(
         x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
     )
-    axs[1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2f}")
+    axs[1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2e}")
     print("Chi2:", np.sum((V - V_model) ** 2))
     print("Chi2:", np.sum((V - V_model) ** 2), file=out_file)
     fig.savefig(cwd + "V_fit.png")
@@ -256,7 +256,7 @@ def plot4pan(
     axs[1][0].fill_between(
         x_axis, 3 * noise_I, -3 * noise_I, color="c", alpha=0.1, label="3 $\sigma$"
     )
-    axs[1][0].legend(title=f"$\chi^2$ = {np.sum((I - I_fit)**2):.2f}")
+    axs[1][0].legend(title=f"$\chi^2$ = {np.sum((I - I_fit)**2):.2e}")
 
     axs[0][1].set(title=name + " Stokes V Fit")
     axs[0][1].plot(
@@ -278,6 +278,6 @@ def plot4pan(
     axs[1][1].fill_between(
         x_axis, 3 * noise_V, -3 * noise_V, color="c", alpha=0.1, label="3 $\sigma$"
     )
-    axs[1][1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2f}")
+    axs[1][1].legend(title=f"$\chi^2$ = {np.sum((V - V_model)**2):.2e}")
 
     fig.savefig(cwd + "4_panel.png")
