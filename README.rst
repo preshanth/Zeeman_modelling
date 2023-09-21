@@ -51,10 +51,12 @@ Getting Started
                            Number of Gaussian components to fit each visible peak
      --output OUTPUT       Output directory
      --justI               Only fits Stokes I
-     --vel                 Plot x axis in LSR velocity. Otherwise defaults to frequency
      --init                Visualize the position of initial guesses
      --trace               Plot trace plots
      --corner              Plot corner plots
+     --absorb              Absorption spectrum input
+     --sensitivity SENSITIVITY
+                           Sensitivity in peak finding
 
 
 Usage
@@ -75,6 +77,8 @@ Usage
 --init          Visualize the position of initial guesses 
 --trace         Plot trace plots
 --corner        Plot corner plots
+--absorb        Conduct absorption Zeeman analysis
+--sensitivity   Sensitivity in initial peak find
 
 Example
 -------
